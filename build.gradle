@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group 'ru.clevertec'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
+
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.3.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    implementation "org.mapstruct:mapstruct:1.4.2.Final"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.0'
+
+    // testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    //  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    // testImplementation 'org.mockito:mockito-core:5.3.1'
+    //for @ExtendWith(MockitoExtension.class)
+    //  testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
+
+}
+
+test {
+    useJUnitPlatform()
+    //for solving java.lang.reflect.InaccessibleObjectException
+    // jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
+}
