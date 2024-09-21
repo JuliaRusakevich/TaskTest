@@ -50,4 +50,10 @@ public class CatController {
         this.service.findCatByUUID(UUID.fromString(uuid)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         this.service.delete(UUID.fromString(uuid));
     }
+
+    @RequestMapping(value = "/cat/{uuid}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public Cat update(@RequestBody Cat cat, @PathVariable String uuid) {
+        return this.service.update(cat, UUID.fromString(uuid));
+    }
 }

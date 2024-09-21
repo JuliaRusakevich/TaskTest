@@ -62,4 +62,11 @@ public class TestData {
                         LocalDate.parse("2022-02-03"), LocalTime.parse("12:00:00"), ZoneOffset.UTC));
 
     }
+
+    public static Cat generateCat(String uuid) {
+        return new Cat()
+                .setId((UUID.fromString(uuid)))
+                .setName("TestName")
+                .setBreed(Breed.MAINE_COON);
+    }
 }

@@ -39,8 +39,8 @@ class CatServiceTest {
         List<CatEntity> catEntities = TestData.generateCatEntities();
         List<Cat> cats = TestData.generateCats();
 
-        lenient().when(repository.findAll())
-                .thenReturn(catEntities); // this won't get called without lenient()
+        when(repository.findAll())
+                .thenReturn(catEntities);
 
         lenient().when(mapper.toDomains(catEntities))
                 .thenReturn(cats); // this won't get called without lenient()
@@ -49,7 +49,7 @@ class CatServiceTest {
         List<Cat> actualResult = service.findAll(); //size 2
 
         //then
-        Assertions.assertEquals(2, actualResult.size());
+        Assertions.assertEquals(cats.size(), actualResult.size());
 
     }
 

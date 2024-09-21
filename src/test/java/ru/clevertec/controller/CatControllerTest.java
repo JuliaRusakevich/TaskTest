@@ -59,10 +59,7 @@ class CatControllerTest {
     })
     void shouldFindCatByUUID(String uuid) throws Exception {
         // given
-        Cat cat = new Cat()
-                .setId((UUID.fromString(uuid)))
-                .setName("Test")
-                .setBreed(Breed.MAINE_COON);
+        Cat cat = TestData.generateCat(uuid);
 
         Mockito.when(this.service.findCatByUUID(UUID.fromString(uuid)))
                 .thenReturn(Optional.of(cat));
@@ -71,7 +68,7 @@ class CatControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/cat/{uuid}", uuid))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(uuid))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("TestName"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.breed").value(Breed.MAINE_COON.name()));
 
         Mockito.verify(service, Mockito.times(1)).findCatByUUID(UUID.fromString(uuid));
@@ -99,14 +96,12 @@ class CatControllerTest {
     @DisplayName("POST /api/v1/cat return HTTP-status 201 CREATED")
     @ParameterizedTest
     @ValueSource(strings = {
-            "2a53509c-4037-4b49-8569-a7691335ed4d"
+            "259c22c2-6652-4637-a084-9e243afde77b"
     })
     void shouldAddNewCat_AndReturnValidEntity(String uuid) throws Exception {
         // given
-        Cat cat = new Cat()
-                .setId(UUID.fromString(uuid))
-                .setBreed(Breed.MAINE_COON)
-                .setName("TestName");
+        Cat cat = TestData.generateCat(uuid);
+
         Mockito.when(this.service.create(cat)).thenReturn(cat);
 
         // when, then
@@ -115,27 +110,36 @@ class CatControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                 "id": "2a53509c-4037-4b49-8569-a7691335ed4d",   
-                                 "breed": "MAINE_COON",
-                                 "name": "TestName"
-                                 }
-                                 """
+                                "id": "259c22c2-6652-4637-a084-9e243afde77b",
+                                "breed": "MAINE_COON",
+                                "name": "TestName"
+                                }
+                                """
                         )
                         .accept(MediaType.APPLICATION_JSON))
 
+
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                //.andExpect(MockMvcResultMatchers.jsonPath("$.id").value("2a53509c-4037-4b49-8569-a7691335ed4d"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(uuid))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("TestName"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.breed").value(Breed.MAINE_COON.name()));
     }
 
-    @Test
+
     @DisplayName("DELETE /api/v1/cat/{uuid} return HTTP-status 204 No Content")
-    void shouldDeleteCat_whenUUIDIsValid() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "2a53509c-4037-4b49-8569-a7691335ed1b",
+            "259c22c2-6652-4637-a084-9e243afde77b",
+            "81749b20-9fd1-4884-8b0c-64fac6cb958a",
+            "da94e66e-3be8-4332-8284-4b856127edb1",
+            "d4bcf4eb-8a37-4fa7-9810-cc991e3c7d78",
+            "ae95c477-6b37-42e8-a1ce-bfd6eb27b353",
+    })
+    void shouldDeleteCat_whenUUIDIsValid(String uuid) throws Exception {
         // given
-        Mockito.when(this.service.findCatByUUID(UUID.fromString("2a53509c-4037-4b49-8569-a7691335ed4d")))
+        Mockito.when(this.service.findCatByUUID(UUID.fromString(uuid)))
                 .thenReturn(Optional.of(new Cat()));
 
         //does not have to be specified; for illustrative purposes only
@@ -143,7 +147,7 @@ class CatControllerTest {
                 .when(this.service).delete(UUID.randomUUID());
 
         // when, then
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/cat/{uuid}", UUID.fromString("2a53509c-4037-4b49-8569-a7691335ed4d")))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/cat/{uuid}", UUID.fromString(uuid)))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
     }
@@ -162,4 +166,13 @@ class CatControllerTest {
     }
 
 
+    @Test
+    @DisplayName("PUT /api/v1/cat/{uuid} return HTTP-status 200 OK")
+    void shouldUpdateCat_whenUUIDIsPresent() {
+        // given
+
+        // when
+
+        // then
+    }
 }
